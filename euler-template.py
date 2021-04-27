@@ -14,7 +14,7 @@ case = int(sys.argv[1])
 t0 = time.time()
 
 # define main function
-def euler():
+def eulerFunction():
 
 
 
@@ -28,7 +28,7 @@ def euler():
 
 
 # find solution
-sol = euler(case)
+sol = eulerFunction(case)
 print("the solution is", sol)
 
 # print elapsed time
