@@ -41,15 +41,43 @@ def checkFlush(cards):
     return "Flush"
 
 # returns "Straight" if all cards are consecutive values
-# takes ranks array which is a list of integers translated from card values
+# takes sorted ranks array which is a list of integers translated from card values
 def checkStraight(ranks):
-    ranks.sort(reverse=True)
     for i in range(5):
         # the second condition accounts for the ace-low straight
         if (ranks[i] + i != ranks[0] and ranks[i] + i + 8 != ranks[0]):
             return None
     return "Straight"
 
+
+# checks for Quads, Trips or Full House
+# returns three-part array [str(hand rank), quadsOrTrips, leftover cards]
+def checkQuads(ranks):
+    for i in range(2):
+        if ranks[i] == ranks[i+3]:
+            quads = ranks[i]
+            hicard = ranks[i-1]
+            return ["Quads", quads, hicard]
+    for i in range(3):
+        if ranks[i] == ranks[i+2]:
+            trips = ranks[i]
+            remainder = [ranks[i-1], ranks[i-2]]
+            if (remainder[0] == remainder[1]):
+                return ["Full House", trips, remainder]
+            else:
+                return ["Trips", trips, remainder]
+    return [None]
+    
+
+def checkPair(ranks):
+    paircount = 0
+    for i in range(4):
+        if ranks[i] == ranks[i+1]:
+            paircount = paircount + 1
+
+    if paircount > 0: 
+        return "Pair" #TODO finish this bit
+    return "Straight"
 
 # define main function
 def evaluateHand(cards):
@@ -58,18 +86,22 @@ def evaluateHand(cards):
     for i in range(5):
         ranks.append(rank(cards[i]))
     ranks.sort(reverse=True)
-    print(ranks)
+    # print(ranks)
 
     # check straight flush
     if checkFlush(cards) == "Flush":
         if checkStraight(ranks) == "Straight": 
             return "StraightFlush", ranks[0]
 
-
     # check four of a kind
-    
+    quads = checkQuads(ranks)
+
+    if quads[0] == "Quads":
+        return quads
 
     # check full house 
+    if quads[0] == "Full House":
+        return quads
 
     # check flush
     if checkFlush(cards) == "Flush":
@@ -80,6 +112,8 @@ def evaluateHand(cards):
         return "Straight", ranks[0]
 
     # check three of a kind 
+    if quads[0] == "Trips":
+        return quads
 
     # check pair
 
@@ -89,10 +123,14 @@ def evaluateHand(cards):
     return "high card", ranks
 
 
-cards = ['AS', '2S', '3S', '4S', '5S']
+# cards = ['AS', 'AS', 'AS', 'AH', '5S']
 
-print(checkFlush(cards))
-print(evaluateHand(cards))
+# print(cards[-1])
+
+# remainder = [cards[-1], cards[-2]]
+# print(remainder)
+# print(checkFlush(cards))
+# print(evaluateHand(cards))
 
 # reads the text file with the poker hands
 # puts cards into a list for each hand for each player
@@ -101,9 +139,12 @@ for lines in range(0, case):
     hands = f.readline()
     hand1 = hands[0:14].split()
     hand2 = hands[15:29].split()
-
+    print("")
     print("hand1", hand1)
+    print(evaluateHand(hand1))
+    print("")
     print("hand2", hand2)
+    print(evaluateHand(hand2))
 f.close()
 
 
