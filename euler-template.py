@@ -7,9 +7,6 @@ import time
 # for information, please visit: 
 # https://projecteuler.net/about
 
-# read in test case as a command line argument
-case = int(sys.argv[1])
-
 # start timer
 t0 = time.time()
 
@@ -26,6 +23,8 @@ def eulerFunction():
 
 
 
+# read in test case as a command line argument
+case = int(sys.argv[1])
 
 # find solution
 sol = eulerFunction(case)
