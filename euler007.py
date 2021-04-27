@@ -24,6 +24,27 @@ def isPrime(primes_list, x):
     return True
 
 
+# finds the next prime, given a list of primes 
+# this efficient solve checks only odd candidates 
+def findNextPrime(primes_list):
+    # start with x = largest prime + 2 (not plus 1 since primes > 2 can't be even)
+    x = primes_list[-1] + 2
+    checkPrime = isPrime(primes_list, x)
+    while checkPrime == None:
+        # increment x and check again
+        x = x + 2
+        checkPrime = isPrime(primes_list, x)
+    return x        
+
+# generates a list of the first n primes (minium n==3)
+def genPrimesList(n):
+    primes = [2, 3, 5]
+    while len(primes) < n:
+        next_prime = findNextPrime(primes)
+        primes.append(next_prime)
+    return primes
+
+
 # # read in test case as a command line argument
 case = int(sys.argv[1])
 

@@ -4,6 +4,8 @@ from math import floor
 
 # this file has good functions for finding primes efficiently
 
+# Cleaner equivalent code in: euler003-brief.py
+
 # this code solves the problem at the following link: 
 # https://projecteuler.net/problem=3
 
@@ -24,7 +26,6 @@ def smallestPrimeFactor(n):
     if n%3 == 0: return 3
     primes = [2, 3]
     for prime in primes:
-        # TODO stop this list from fucking up
         next_prime = findNextPrime(primes)
         primes.append(next_prime)
         if n % next_prime == 0:
