@@ -3,6 +3,7 @@
 # 0.02800607681274414 seconds elapsed
 
 import time
+import sys
 t0 = time.time()
 
 # main function
@@ -37,7 +38,10 @@ def findNextPrime(primes, x):
             return findNextPrime(primes, x + 2)
     return x
 
-solution = primeFactors(600851475143)
+# # read in test case as a command line argument
+case = int(sys.argv[1])
+
+solution = primeFactors(case)
 print("the factors are ", solution)
 print("the solution is", solution[-1])
 print(time.time() - t0, "seconds elapsed")
