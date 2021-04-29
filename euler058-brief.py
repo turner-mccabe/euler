@@ -10,8 +10,6 @@ import time
 # start timer
 t0 = time.time()
 
-# slowSolve() is the main function. it is actually faster than solve()
-
 # sieve of eratosthenes
 def genPrimesList(n):
     """ Input n>=6, Returns a list of primes, 2 <= p < n """
@@ -55,7 +53,7 @@ def checkResults(primes_list, numbers_list):
         #     results.append(False)
     return results
 
-
+# todo look at hash maps instead of lists for checking results
 
 def slowSolve(criterion):
     side_length = 3
@@ -73,13 +71,13 @@ def slowSolve(criterion):
         side_length = side_length + 2
 
         # iterate primes if needed 
+        t_prime = time.time()
         while primes[-1] < spiral[-1]:
-            t_prime = time.time()
-            primes = genPrimesList(int(round(1.1*spiral[-1]))) 
-            if side_length >= 200:
+            primes = genPrimesList(int(round(1.1*spiral[3])) + 10) 
+            if side_length >= 100:
                 # clear out unused primes to improve results gen speed
                 primes = [prime for prime in primes if prime >= spiral[0]]
-            t_primes = t_primes + time.time() - t_prime
+        t_primes = t_primes + time.time() - t_prime
 
         # calculate results
         t0results = time.time()
@@ -92,15 +90,40 @@ def slowSolve(criterion):
     print("total results gen time", t_results)
     return side_length
 
-# print(spiralDiagonals(15203)[-1])
-# print(genPrimesList(231131209)[-1])
+
+def isPrime(primes_list, x):
+    for i in primes_list:
+        if x % i == 0:
+            return False
+    return True
+ 
+def findNextPrime(primes_list):
+    # start with x = largest prime + 2 (not plus 1 since primes > 2 can't be even)
+    x = primes_list[-1] + 2
+    while isPrime(primes_list, x) == False:
+        x = x + 2
+        checkPrime = isPrime(primes_list, x)
+    return x      
+
+
+
+
+
+
+
+
+
+
+# print(spiralDiagonals(25000)[-1])
+# x = genPrimesList(625050001)
+# print(x[-1])
+# print(findNextPrime(x))
 # # read in test case as a command line argument
 # case = int(sys.argv[1])
 criterion = 0.1
 
 # # find solution
-sol = slowSolve(criterion)
-print("the solution is", sol)
+print("the solution is", slowSolve(criterion))
 
 # print elapsed time
 print(time.time() - t0, "seconds elapsed")
