@@ -58,18 +58,18 @@ def findNextPrime(primes, x):
 
 # Finds the first four consecutive integers to have four distinct prime factors each.
 def conPrimes(x, top, n):
-    factor3 = len(set(primeFactors(x + 2)))
-    factor2 = len(set(primeFactors(x + 1)))
-    factor1 = len(set(primeFactors(x)))
+    factor3 = set(primeFactors(x + 2))
+    factor2 = set(primeFactors(x + 1))
+    factor1 = set(primeFactors(x))
     while x < top:   
-        factor4 = len(set(primeFactors(x + 3)))
-        if factor4 == n:
-            print(1, x)
-            if factor3 == n:
+        factor4 = set(primeFactors(x + 3))
+        if len(factor4) == n:
+            print(1, x+3, factor4)
+            if len(factor3) == n:
                 print(2, x)
-                if factor2 == n:
+                if len(factor2) == n:
                     print(3, x)
-                    if factor1 == n:    
+                    if len(factor1) == n:    
                         return x   
             x = x + 1
             factor1 = factor2
@@ -77,18 +77,38 @@ def conPrimes(x, top, n):
             factor3 = factor4
         else:
             x = x + 4
-            factor3 = len(set(primeFactors(x + 2)))
-            factor2 = len(set(primeFactors(x + 1)))
-            factor1 = len(set(primeFactors(x)))
+            factor3 = set(primeFactors(x + 2))
+            factor2 = set(primeFactors(x + 1))
+            factor1 = set(primeFactors(x))
+    return 
+
+# Finds the first four consecutive integers to have four distinct prime factors each.
+def threePrimes(x, top, n):
+    factor2 = set(primeFactors(x + 1))
+    factor1 = set(primeFactors(x))
+    while x < top:   
+        factor3 = set(primeFactors(x + 2))
+        if len(factor3) == n:
+            print(2, x+2, factor3)
+            if len(factor2) == n:
+                print(3, x)
+                if len(factor1) == n:    
+                    return x   
+            x = x + 1
+            factor1 = factor2
+            factor2 = factor3
+        else:
+            x = x + 3
+            factor2 = set(primeFactors(x + 1))
+            factor1 = set(primeFactors(x))
     return 
 
 n = 4
-x = 46300
-top = 50000
+x = 70000
+top = 80000
 sol = conPrimes(x, top, n)
 print(time.time() - t0, "seconds elapsed")
 # next do 30k to 40k
 print("the solution is", sol)
-
 
 

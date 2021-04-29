@@ -36,16 +36,13 @@ def findNextPrime(primes_list):
         checkPrime = isPrime(primes_list, x)
     return x        
 
-# generates a list of the first n primes (minium n==3)
+# generates a list of all primes < n
 def genPrimesList(n):
     primes = [2, 3, 5]
-    tally = 2+3
     while primes[-1] < n:
-        tally = tally + primes[-1]
         next_prime = findNextPrime(primes)
         primes.append(next_prime)
-    return primes, tally
-
+    return primes
 
 # # read in test case as a command line argument
 case = int(sys.argv[1])
