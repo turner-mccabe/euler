@@ -22,70 +22,75 @@ def genPrimesList(n):
         sieve[k*(k-2*(i&1)+4)//3::2*k] = [False] * ((n//6-k*(k-2*(i&1)+4)//6-1)//k+1)
     return [2,3] + [3*i+1|1 for i in range(1,n//3-correction) if sieve[i]]
 
-# creates an array of the diagonals of a spiral. uses addSpiral()
-def spiralDiagonals(side_length):
-    diagonals = [1]
-    existing_side_length = 1
-    while existing_side_length < side_length:
-        diagonals.extend(addSpiral(existing_side_length, diagonals))
-        existing_side_length = int((len(diagonals) - 1) / 2 + 1)
-    return diagonals
-
 # adds additional side length to an existing spiral
 def addSpiral(existing_side_length, diagonals):
     x = diagonals[-1]
     extra_diagonals = []
-    skip = 1 + existing_side_length
     for i in range(4):
-        x = x + skip
+        x = x + 1 + existing_side_length # skip = 1 + existing side length
         extra_diagonals.append(x)
     return extra_diagonals
-
-
-
-# one-time search for results
-def checkResults(primes_list, numbers_list):
-    results = []
-    for number in numbers_list:
-        if number in primes_list:
-            results.append(True)
-        # else:
-        #     results.append(False)
-    return results
 
 # todo look at hash maps instead of lists for checking results
 
 def slowSolve(criterion):
     side_length = 3
-    spiral = spiralDiagonals(side_length)
-    primes = genPrimesList(spiral[-1])
-    results = sum(checkResults(primes, spiral))
-    spiral_count = len(spiral)
-    prime_rate = results/len(spiral)
+    spiral = [1, 3, 5, 7, 9]
+    primes = genPrimesList(10000)
+    results = 3
+    prime_rate = .6
     t_primes = 0
     t_results = 0
     while prime_rate > criterion:
         # iterate spiral
         spiral = addSpiral(side_length, spiral)
-        spiral_count = spiral_count + 4
         side_length = side_length + 2
+        t_prime = time.time()
 
         # iterate primes if needed 
-        t_prime = time.time()
-        while primes[-1] < spiral[-1]:
-            primes = genPrimesList(int(round(1.1*spiral[3])) + 10) 
+        if primes[-1] < spiral[-1]:
+            primes = genPrimesList(int(1.2*spiral[-1])) 
             if side_length >= 100:
                 # clear out unused primes to improve results gen speed
-                primes = [prime for prime in primes if prime >= spiral[0]]
+                # TODO this search could be more efficient
+                # primes = [prime for prime in primes if prime >= spiral[0]]
+                # new code
+                i = -1
+                while primes[i] > spiral[0]:
+                    i = i - 1000
+                primes = primes[i:]
+                print("spiral", spiral[0], "i", i, "prime", primes[0], "prime rate", prime_rate)
+                
+
         t_primes = t_primes + time.time() - t_prime
+        t0results = time.time()
 
         # calculate results
-        t0results = time.time()
-        results = results + sum(checkResults(primes, spiral[-4:]))
-        prime_rate = results/spiral_count
-        print("side_length", side_length, "prime_rate", prime_rate)
-        t_results = t_results + time.time() - t0results
+        # for number in spiral:
+        #     if number in primes:
+        #         results = results + 1
+        for number in spiral:
+            for prime in primes:
+                if prime == number:
+                    results = results + 1
+                elif prime > number: 
+                    break
 
+
+        prime_rate = results / (side_length*2 - 1)
+
+        # periodically trim the primes list
+        if spiral[0] > primes[len(primes)//8]:
+            x = -1
+            while primes[x] > spiral[0]:
+                x = x - 100
+            primes = primes[x:]
+    
+
+        t_results = t_results + time.time() - t0results
+        # print("side_length", side_length, "prime_rate", prime_rate)
+
+    print("final prime:", primes[-1])
     print("total primes gen time", t_primes)
     print("total results gen time", t_results)
     return side_length
@@ -106,21 +111,7 @@ def findNextPrime(primes_list):
     return x      
 
 
-
-
-
-
-
-
-
-
-# print(spiralDiagonals(25000)[-1])
-# x = genPrimesList(625050001)
-# print(x[-1])
-# print(findNextPrime(x))
-# # read in test case as a command line argument
-# case = int(sys.argv[1])
-criterion = 0.1
+criterion = 0.127
 
 # # find solution
 print("the solution is", slowSolve(criterion))
