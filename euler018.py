@@ -63,6 +63,7 @@ def find_next_three(array, params):
     # find sums for each possible path
     for path_num in range(2 ** depth):
         path = bin(path_num)[2:].zfill(depth).replace("1", " 1").replace("0", " 0").split()
+        print(path)
 
         s = initial_sum
         position = j        
