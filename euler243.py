@@ -242,21 +242,21 @@ def solution(target):
 
 
 def small_solution():
-    factors = [2, 3, 5, 7, 11, 13, 17, 23, 29]
-    x = 1
+    factors = [2, 3, 5, 7, 11, 13, 17, 19, 23]
+    x = 2
     for f in factors:
         x = x * f
-    res = c_resilience(x, factors)
+    res = o_resilience(x, factors)
     print(x, factors, res)
     return x
 
 
-# sol = small_solution()
-# print("a solution is ", sol)
-
-
-sol = solution(15499/94744)
+sol = small_solution()
 print("a solution is ", sol)
+
+
+# sol = solution(15499/94744)
+# print("a solution is ", sol)
 print("elapsed time: ", time.time() - t0)
 
 
